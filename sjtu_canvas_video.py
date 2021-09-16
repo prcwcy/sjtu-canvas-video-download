@@ -11,18 +11,22 @@ oauth_path = base64.b64encode(oauth_href.encode("utf-8")).decode("utf-8")
 
 
 def get_oauth_consumer_key(cookies):
-    oauth_consumer_key = base64.b64decode(
-        BeautifulSoup(
-            requests.get(
-                "https://courses.sjtu.edu.cn/app/vodvideo/vodVideoPlay.d2j?ssoCheckToken=ssoCheckToken&refreshToken=&accessToken=&userId=&",
-                cookies=cookies
-            ).content, "html.parser"
-        ).find(
-            "meta",
-            id="xForSecName"
-        )["vaule"]
-    ).decode("utf-8")
-    return oauth_consumer_key
+    try:
+        oauth_consumer_key = base64.b64decode(
+            BeautifulSoup(
+                requests.get(
+                    "https://courses.sjtu.edu.cn/app/vodvideo/vodVideoPlay.d2j?ssoCheckToken=ssoCheckToken&refreshToken=&accessToken=&userId=&",
+                    cookies=cookies
+                ).content, "html.parser"
+            ).find(
+                "meta",
+                id="xForSecName"
+            )["vaule"]
+        ).decode("utf-8")
+        return oauth_consumer_key
+    except Exception:
+        pass
+    return None
 
 
 def get_random_uuid(length):
@@ -129,8 +133,10 @@ def get_course(course_id, cookies, oauth_consumer_key):
 
 
 def get_all_courses(cookies):
-    oauth_consumer_key = get_oauth_consumer_key(cookies)
     all_courses = []
+    oauth_consumer_key = get_oauth_consumer_key(cookies)
+    if oauth_consumer_key is None:
+        return all_courses
     subject_ids, tecl_ids = get_subject_ids(cookies)
     for subject_id, tecl_id in zip(subject_ids, tecl_ids):
         course_ids = get_course_ids(subject_id, tecl_id, cookies)

@@ -1,6 +1,7 @@
 import tkinter as tk
 import tkinter.filedialog
 from sjtu_login_frame import LoginFrame
+from sjtu_login_alternative_frame import LoginAlternativeFrame
 from sjtu_canvas_video_picker_frame import SinglePickerFrame, MultiplePickerFrame
 from sjtu_canvas_video_helper import create_window
 from sjtu_canvas_video import get_all_courses
@@ -28,7 +29,13 @@ class MainFrame(tk.Frame):
             command=self.popup_login,
             text="登录jAccount"
         )
-        self.login_button.grid(column=0, columnspan=2, row=num_row)
+        self.login_button.grid(column=0, row=num_row)
+        self.login_alternative_button = tk.Button(
+            self,
+            command=self.popup_login_alternative,
+            text="输入JSESSIONID (不需要密码的登录)"
+        )
+        self.login_alternative_button.grid(column=1, row=num_row)
         num_row += 1
 
         self.import_label = tk.Label(
@@ -145,3 +152,11 @@ class MainFrame(tk.Frame):
         window = create_window(self.master)
         window.geometry("400x200")
         MultiplePickerFrame(self.all_courses, window)
+
+    def popup_login_alternative(self):
+        window = create_window(self.master)
+        window.geometry("400x100")
+        LoginAlternativeFrame(
+            lambda cookies: self.refresh_all_courses(cookies),
+            window
+        )
