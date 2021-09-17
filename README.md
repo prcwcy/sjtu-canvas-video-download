@@ -6,6 +6,60 @@
 
 心动不如行动, 赶快试试吧!
 
+### 界面展示
+
+##### Windows 10 (21H1, 64位)
+
+主界面:
+
+![1-1](README.assets/1-1.png)
+
+登录界面:
+
+![1-2](README.assets/1-2.png)
+
+JSESSIONID登录界面:
+
+![1-3](README.assets/1-3.png)
+
+单个下载选择界面:
+
+![1-4](README.assets/1-4.png)
+
+批量下载选择界面:
+
+![1-5](README.assets/1-5.png)
+
+下载界面:
+
+![1-6](README.assets/1-6.png)
+
+##### Linux (Ubuntu 20.04)
+
+主界面:
+
+![2-1](README.assets/2-1.png)
+
+登录界面:
+
+![2-2](README.assets/2-2.png)
+
+JSESSIONID登录界面:
+
+![2-3](README.assets/2-3.png)
+
+单个下载选择界面:
+
+![2-4](README.assets/2-4.png)
+
+批量下载选择界面:
+
+![2-5](README.assets/2-5.png)
+
+下载界面:
+
+![2-6](README.assets/2-6.png)
+
 ### 非Windows用户使用方法
 
 目前只能使用源代码运行. 以Ubuntu 20.04为例. 请安装`python3`, `python3-pip`.
