@@ -25,7 +25,7 @@ def download_courses(course_links, course_filenames, video_dirname):
                 " header=referer: https://courses.sjtu.edu.cn",
                 file=aria2_txt_file
             )
-    subprocess.run(
+    subprocess.Popen(
         [
             aria2_exe_filename,
             "-d", video_dirname,
