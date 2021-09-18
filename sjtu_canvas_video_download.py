@@ -2,6 +2,7 @@ import time
 import os
 import sys
 import subprocess
+import tkinter.messagebox
 
 self_dirname = os.path.dirname(sys.argv[0])
 
@@ -36,11 +37,15 @@ def download_courses(course_links, course_filenames, video_dirname):
             creationflags=subprocess.CREATE_NEW_CONSOLE
         )
     else:
-        subprocess.Popen(
-            [
-                "aria2c",
-                "-d", video_dirname,
-                "-i", aria2_txt_filename,
-                "-x", str(16)
-            ]
-        )
+        tkinter.messagebox.showinfo("提示", "请查看控制台输出")
+        try:
+            subprocess.run(
+                [
+                    "aria2c",
+                    "-d", video_dirname,
+                    "-i", aria2_txt_filename,
+                    "-x", str(16)
+                ]
+            )
+        except KeyboardInterrupt:
+            pass
