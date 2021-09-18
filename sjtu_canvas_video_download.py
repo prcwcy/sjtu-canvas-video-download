@@ -25,12 +25,22 @@ def download_courses(course_links, course_filenames, video_dirname):
                 " header=referer: https://courses.sjtu.edu.cn",
                 file=aria2_txt_file
             )
-    subprocess.Popen(
-        [
-            aria2_exe_filename,
-            "-d", video_dirname,
-            "-i", aria2_txt_filename,
-            "-x", "16"
-        ],
-        creationflags=subprocess.CREATE_NEW_CONSOLE
-    )
+    if sys.platform == "win32":
+        subprocess.Popen(
+            [
+                aria2_exe_filename,
+                "-d", video_dirname,
+                "-i", aria2_txt_filename,
+                "-x", str(16)
+            ],
+            creationflags=subprocess.CREATE_NEW_CONSOLE
+        )
+    else:
+        subprocess.Popen(
+            [
+                "aria2c",
+                "-d", video_dirname,
+                "-i", aria2_txt_filename,
+                "-x", str(16)
+            ]
+        )
