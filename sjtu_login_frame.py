@@ -4,7 +4,6 @@ import tkinter.messagebox
 import sys
 import os
 import json
-from bs4 import BeautifulSoup
 from PIL import ImageTk
 from sjtu_login import *
 
@@ -163,15 +162,8 @@ class LoginFrame(tk.Frame):
             self.params,
             self.cookies
         )
-        if result.url.startswith("https://jaccount.sjtu.edu.cn/jaccount/jalogin"):
-            error_message = BeautifulSoup(
-                result.content, "html.parser"
-            ).find(
-                "div", attrs={
-                    "id": "div_warn", "class": "warn-info"
-                }
-            ).text
-            tkinter.messagebox.showerror("登录失败 (远程)", error_message)
+        if result is None:
+            tkinter.messagebox.showerror("登录失败 (远程)", "请正确填写用户名, 密码和验证码")
             self.refresh_all()
         else:
             tkinter.messagebox.showinfo("登录成功", "登录成功")
@@ -192,7 +184,7 @@ class LoginFrame(tk.Frame):
                         ensure_ascii=False,
                         check_circular=False
                     )
-            self.callback(result.cookies.get_dict())
+            self.callback(result)
 
     def username_checkbutton_changed(self):
         if not self.username_checkbutton_var.get():

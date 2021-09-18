@@ -22,7 +22,9 @@ def get_params_uuid_cookies(url):
     uuid = re.search(
         "(['\"])(uuid)(\\1)(\\s*:\\s*)(['\"])(.*)(\\5)", r.text
     ).group(6)
-    cookies = r.cookies.get_dict()
+    cookies = r.cookies
+    for i in r.history:
+        cookies.update(i.cookies)
     return params, uuid, cookies
 
 
@@ -51,4 +53,9 @@ def login(username, password, uuid, captcha, params, cookies):
         headers={"accept-language": "zh-CN"},
         cookies=cookies,
     )
-    return r
+    if r.url.startswith("https://jaccount.sjtu.edu.cn/jaccount/jalogin"):
+        return None
+    cookies = r.cookies
+    for i in r.history:
+        cookies.update(i.cookies)
+    return cookies
