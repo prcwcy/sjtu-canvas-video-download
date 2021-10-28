@@ -1,6 +1,6 @@
 import requests
 from PIL import Image
-import re
+from bs4 import BeautifulSoup
 import io
 import urllib.parse
 
@@ -19,9 +19,15 @@ def get_params_uuid_cookies(url):
         headers={"accept-language": "zh-CN"}
     )
     params = parse_params(r.url)
-    uuid = re.search(
-        "(['\"])(uuid)(\\1)(\\s*:\\s*)(['\"])(.*)(\\5)", r.text
-    ).group(6)
+    uuid = BeautifulSoup(
+        r.content, "html.parser"
+    ).find(
+        "input",
+        attrs={
+            "type": "hidden",
+            "name": "uuid"
+        }
+    )["value"]
     cookies = r.cookies
     for i in r.history:
         cookies.update(i.cookies)
