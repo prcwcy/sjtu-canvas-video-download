@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.filedialog
 from sjtu_login_frame import LoginFrame
 from sjtu_login_alternative_frame import LoginAlternativeFrame
+from sjtu_qr_code_login_frame import QRCodeLoginFrame
 from sjtu_canvas_video_picker_frame import SinglePickerFrame, MultiplePickerFrame
 from sjtu_canvas_video_helper import create_window
 from sjtu_canvas_video import get_all_courses
@@ -15,6 +16,8 @@ class MainFrame(tk.Frame):
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)
+        self.columnconfigure(2, weight=1)
+        self.columnconfigure(3, weight=1)
 
         num_row = 0
 
@@ -22,7 +25,7 @@ class MainFrame(tk.Frame):
             self,
             text="第一次使用本工具, 请点击下方的按钮登录jAccount, 以获取Canvas视频信息."
         )
-        self.login_label.grid(column=0, columnspan=2, row=num_row)
+        self.login_label.grid(column=0, row=num_row, columnspan=4)
         num_row += 1
         self.login_button = tk.Button(
             self,
@@ -30,64 +33,70 @@ class MainFrame(tk.Frame):
             text="登录jAccount"
         )
         self.login_button.grid(column=0, row=num_row)
+        self.qr_code_login_button = tk.Button(
+            self,
+            command=self.popup_qr_code_login,
+            text="登录jAccount (二维码)"
+        )
+        self.qr_code_login_button.grid(column=1, row=num_row)
         self.login_alternative_button = tk.Button(
             self,
             command=self.popup_login_alternative,
             text="输入JSESSIONID (不需要密码的登录)"
         )
-        self.login_alternative_button.grid(column=1, row=num_row)
+        self.login_alternative_button.grid(column=2, row=num_row, columnspan=2)
         num_row += 1
 
         self.import_label = tk.Label(
             self,
             text="如果此前已经使用本工具获取并保存了Canvas视频信息, 请点击下方的按钮导入该文件."
         )
-        self.import_label.grid(column=0, columnspan=2, row=num_row)
+        self.import_label.grid(column=0, row=num_row, columnspan=4)
         num_row += 1
         self.import_button = tk.Button(
             self,
             command=self.popup_import,
             text="导入下载地址"
         )
-        self.import_button.grid(column=0, columnspan=2, row=num_row)
+        self.import_button.grid(column=0, row=num_row, columnspan=4)
         num_row += 1
 
         self.export_label = tk.Label(
             self,
             text="建议在获取Canvas视频信息后, 点击下方的按钮将其保存为文件."
         )
-        self.export_label.grid(column=0, columnspan=2, row=num_row)
+        self.export_label.grid(column=0, row=num_row, columnspan=4)
         num_row += 1
         self.export_button = tk.Button(
             self,
             command=self.popup_export,
             text="保存下载地址"
         )
-        self.export_button.grid(column=0, columnspan=2, row=num_row)
+        self.export_button.grid(column=0, row=num_row, columnspan=4)
         num_row += 1
 
         self.download_label = tk.Label(
             self,
             text="获取Canvas视频信息后, 可点击下方的按钮下载视频."
         )
-        self.download_label.grid(column=0, columnspan=2, row=num_row)
+        self.download_label.grid(column=0, row=num_row, columnspan=4)
         num_row += 1
         self.download_single_button = tk.Button(
             self,
             command=self.popup_download_single,
             text="单个下载"
         )
-        self.download_single_button.grid(column=0, row=num_row, sticky=tk.E)
+        self.download_single_button.grid(column=0, row=num_row, columnspan=2)
         self.download_multiple_button = tk.Button(
             self,
             command=self.popup_download_multiple,
             text="批量下载"
         )
-        self.download_multiple_button.grid(column=1, row=num_row, sticky=tk.W)
+        self.download_multiple_button.grid(column=2, row=num_row, columnspan=2)
         num_row += 1
 
         self.status_label = tk.Label(self)
-        self.status_label.grid(column=0, columnspan=2, row=num_row)
+        self.status_label.grid(column=0, row=num_row, columnspan=4)
         num_row += 1
 
         for i in range(num_row):
@@ -157,6 +166,15 @@ class MainFrame(tk.Frame):
         window = create_window(self.master)
         window.geometry("400x100")
         LoginAlternativeFrame(
+            lambda cookies: self.refresh_all_courses(cookies),
+            window
+        )
+
+    def popup_qr_code_login(self):
+        window = create_window(self.master)
+        window.geometry("300x300")
+        QRCodeLoginFrame(
+            "https://courses.sjtu.edu.cn/app/oauth/2.0/login?login_type=outer",
             lambda cookies: self.refresh_all_courses(cookies),
             window
         )

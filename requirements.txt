@@ -1,3 +1,4 @@
 beautifulsoup4
 Pillow
 requests
+websocket-client
