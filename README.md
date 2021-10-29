@@ -75,9 +75,10 @@ sudo apt install python3-pip
 sudo pip3 install -r requirements.txt
 ```
 
-需要安装`python3-pil.imagetk`, `aria2`.
+需要安装`python3-tk`, `python3-pil.imagetk`, `aria2`.
 
 ```sh
+sudo apt install python3-tk
 sudo apt install python3-pil.imagetk
 sudo apt install aria2
 ```
