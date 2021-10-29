@@ -47,7 +47,7 @@ class LoginAlternativeFrame(tk.Frame):
     def confirm(self):
         JSESSIONID = self.JSESSIONID_var.get()
         if not JSESSIONID:
-            tkinter.messagebox.showerror("失败", "请输入JSESSIONID")
+            tkinter.messagebox.showerror("错误", "请输入JSESSIONID")
             return
         self.master.destroy()
         self.callback({"JSESSIONID": JSESSIONID})

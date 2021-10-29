@@ -1,17 +1,26 @@
 import tkinter as tk
 import tkinter.filedialog
+import tkinter.messagebox
 from sjtu_login_frame import LoginFrame
 from sjtu_login_alternative_frame import LoginAlternativeFrame
 from sjtu_qr_code_login_frame import QRCodeLoginFrame
 from sjtu_canvas_video_picker_frame import SinglePickerFrame, MultiplePickerFrame
 from sjtu_canvas_video_helper import create_window
 from sjtu_canvas_video import get_all_courses
+from sjtu_real_canvas_video import get_real_canvas_videos, get_real_canvas_videos_using_sub_cookies
 import json
 
 
 class MainFrame(tk.Frame):
     def __init__(self, master=None):
         tk.Frame.__init__(self, master)
+
+        self.urls = [
+            "https://courses.sjtu.edu.cn/app/oauth/2.0/login?login_type=outer",
+            "https://oc.sjtu.edu.cn/login/openid_connect"
+        ]
+        self.url_idx = 0
+
         self.grid(sticky=tk.N+tk.S+tk.W+tk.E)
 
         self.columnconfigure(0, weight=1)
@@ -42,7 +51,7 @@ class MainFrame(tk.Frame):
         self.login_alternative_button = tk.Button(
             self,
             command=self.popup_login_alternative,
-            text="输入JSESSIONID (不需要密码的登录)"
+            text="输入JSESSIONID (开发者入口)"
         )
         self.login_alternative_button.grid(column=2, row=num_row, columnspan=2)
         num_row += 1
@@ -95,6 +104,31 @@ class MainFrame(tk.Frame):
         self.download_multiple_button.grid(column=2, row=num_row, columnspan=2)
         num_row += 1
 
+        self.course_id_label = tk.Label(self, text="课程ID")
+        self.course_id_label.grid(column=0, row=num_row)
+        self.course_id_var = tk.StringVar()
+        self.course_id_entry = tk.Entry(
+            self,
+            textvariable=self.course_id_var,
+            state=tk.DISABLED
+        )
+        self.course_id_entry.grid(
+            column=1, row=num_row, columnspan=2, sticky=tk.W+tk.E
+        )
+        self.course_id_checkbutton_var = tk.IntVar(
+            value=False
+        )
+        self.course_id_checkbutton = tkinter.ttk.Checkbutton(
+            self,
+            variable=self.course_id_checkbutton_var,
+            command=self.course_id_checkbutton_changed,
+            text="使用课程ID"
+        )
+        self.course_id_checkbutton.grid(
+            column=3, row=num_row
+        )
+        num_row += 1
+
         self.status_label = tk.Label(self)
         self.status_label.grid(column=0, row=num_row, columnspan=4)
         num_row += 1
@@ -105,6 +139,14 @@ class MainFrame(tk.Frame):
         self.all_courses = []
         self.refresh_status_label()
 
+    def course_id_checkbutton_changed(self):
+        if self.course_id_checkbutton_var.get():
+            self.url_idx = 1
+            self.course_id_entry.config(state=tk.NORMAL)
+        else:
+            self.url_idx = 0
+            self.course_id_entry.config(state=tk.DISABLED)
+
     def refresh_status_label(self):
         num_subject = len(self.all_courses)
         num_course = sum([len(courses) for courses in self.all_courses])
@@ -113,14 +155,29 @@ class MainFrame(tk.Frame):
         )
 
     def refresh_all_courses(self, cookies):
-        self.all_courses = get_all_courses(cookies)
+        if self.course_id_checkbutton_var.get():
+            if type(cookies) == dict:
+                self.all_courses = get_real_canvas_videos_using_sub_cookies(
+                    cookies
+                )
+            else:
+                course_id = self.course_id_var.get()
+                if not course_id:
+                    tkinter.messagebox.showerror("错误", "请输入课程ID")
+                    return
+                self.all_courses = get_real_canvas_videos(course_id, cookies)
+        else:
+            self.all_courses = get_all_courses(cookies)
         self.refresh_status_label()
 
     def popup_login(self):
+        if self.course_id_checkbutton_var.get() and not self.course_id_var.get():
+            tkinter.messagebox.showerror("错误", "请输入课程ID")
+            return
         window = create_window(self.master)
         window.geometry("400x200")
         LoginFrame(
-            "https://courses.sjtu.edu.cn/app/oauth/2.0/login?login_type=outer",
+            self.urls[self.url_idx],
             lambda cookies: self.refresh_all_courses(cookies),
             window
         )
@@ -171,10 +228,13 @@ class MainFrame(tk.Frame):
         )
 
     def popup_qr_code_login(self):
+        if self.course_id_checkbutton_var.get() and not self.course_id_var.get():
+            tkinter.messagebox.showerror("错误", "请输入课程ID")
+            return
         window = create_window(self.master)
         window.geometry("300x300")
         QRCodeLoginFrame(
-            "https://courses.sjtu.edu.cn/app/oauth/2.0/login?login_type=outer",
+            self.urls[self.url_idx],
             lambda cookies: self.refresh_all_courses(cookies),
             window
         )

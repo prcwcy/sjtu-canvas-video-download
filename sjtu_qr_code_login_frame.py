@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox
 from PIL import ImageTk
 from sjtu_login import get_params_uuid_cookies
 from sjtu_qr_code_login import *
@@ -68,6 +69,7 @@ class QRCodeLoginFrame(tk.Frame):
         )
 
     def login(self):
+        tkinter.messagebox.showinfo("登录成功", "登录成功")
         self.master.destroy()
         result = qr_code_login(self.uuid, self.cookies)
         self.callback(result)
