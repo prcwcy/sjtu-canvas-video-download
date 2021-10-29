@@ -2,13 +2,13 @@
 
 重制版!
 
-图形化界面! 采用tkinter实现!
+图形化界面! 采用`tkinter`实现!
 
 心动不如行动, 赶快试试吧!
 
 ### 界面展示
 
-##### Windows 10 (21H1, 64位)
+##### Windows 10 (21H1, 64位) / Windows 11 (21H2, 64位)
 
 主界面:
 
@@ -17,6 +17,10 @@
 登录界面:
 
 ![1-2](README.assets/1-2.png)
+
+二维码登录界面:
+
+![1-7](README.assets/1-7.png)
 
 JSESSIONID登录界面:
 
@@ -43,6 +47,10 @@ JSESSIONID登录界面:
 登录界面:
 
 ![2-2](README.assets/2-2.png)
+
+二维码登录界面:
+
+![2-7](README.assets/2-7.png)
 
 JSESSIONID登录界面:
 
