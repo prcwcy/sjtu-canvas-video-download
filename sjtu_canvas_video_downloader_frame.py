@@ -105,11 +105,15 @@ class DownloaderFrame(tk.Frame):
                 course_filename_raw = f"{subject_name}_{teacher_name}_{course_name}"
                 course_dirname = f"{subject_name}_{teacher_name}"
                 if partial_download:
-                    course_link = course["rtmpUrlHdv"]
-                    course_filename_ext = get_course_filename_ext(course_link)
-                    course_filename = f"{course_dirname}/{course_filename_raw}{course_filename_ext}"
-                    course_links.append(course_link)
-                    course_filenames.append(course_filename)
+                    for i, video in enumerate(course["videoPlayResponseVoList"]):
+                        print(video, type(video['cdviViewNum']))
+                        if video['cdviViewNum'] != 0:
+                            continue
+                        course_link = video["rtmpUrlHdv"]
+                        course_filename_ext = get_course_filename_ext(course_link)
+                        course_filename = f"{course_dirname}/{course_filename_raw}{course_filename_ext}"
+                        course_links.append(course_link)
+                        course_filenames.append(course_filename)
                 else:
                     for i, video in enumerate(course["videoPlayResponseVoList"]):
                         course_link = video["rtmpUrlHdv"]
