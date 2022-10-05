@@ -1,0 +1,7 @@
+__pycache__/
+tmp/
+config.json
+build/
+dist/
+main.spec
+windows.zip

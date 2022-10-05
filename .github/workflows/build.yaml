@@ -1,0 +1,33 @@
+on: push
+
+jobs:
+  win:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - run: pip install -r requirements.txt
+      - run: pyinstaller main.py
+      - run: xcopy aria2\ dist\main\aria2\ /e /i /y
+      - uses: actions/upload-artifact@v3
+        with:
+          name: windows
+          path: dist/main/
+      - run: Compress-Archive dist\main\* windows.zip
+      - id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.repository.pushed_at}}
+          release_name: ${{ github.event.repository.pushed_at}}
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: windows.zip
+          asset_name: windows.zip
+          asset_content_type: application/zip
