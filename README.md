@@ -1,6 +1,16 @@
 ## SJTU Canvas 视频 (批量) 下载器
 
-本项目使用Github Action自动发布, 保证可执行文件的安全性.
+本项目使用GitHub Actions自动发布, 保证可执行文件的安全性.
+
+### 主界面展示
+
+![main](README.assets/main.png)
+
+### 使用说明
+
+课程ID:
+
+![课程ID](README.assets/课程ID.PNG)
 
 ### 非Windows用户使用方法
 

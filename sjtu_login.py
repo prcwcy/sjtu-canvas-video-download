@@ -65,3 +65,14 @@ def login(username, password, uuid, captcha, params, cookies):
     for i in r.history:
         cookies.update(i.cookies)
     return cookies
+
+
+def login_using_cookies(url, cookies):
+    r = requests.get(
+        url,
+        headers={"accept-language": "zh-CN"},
+        cookies=cookies
+    )
+    cookies.update(r.cookies)
+    for i in r.history:
+        cookies.update(i.cookies)
