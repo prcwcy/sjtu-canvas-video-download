@@ -29,18 +29,41 @@ def get_sub_cookies(course_id, oc_cookies):
     return r.cookies, r.headers["location"].partition("?canvasCourseId=")[-1]
 
 
+def get_real_canvas_video_single(i, sub_cookies):
+    return requests.post(
+        "https://courses.sjtu.edu.cn/lti/vodVideo/getVodVideoInfos",
+        data={
+            "playTypeHls": "true",
+            "id": i["videoId"],
+            "isAudit": "true"
+        },
+        cookies=sub_cookies
+    ).json()["body"]
+
+
+class RealCourse:
+    def __init__(self, i, sub_cookies):
+        self.i = i
+        self.sub_cookies = sub_cookies
+        self.flag = False
+        self.course = None
+
+    def get(self):
+        if not self.flag:
+            self.flag = True
+            self.course = get_real_canvas_video_single(
+                self.i, self.sub_cookies
+            )
+        return self.course
+
+    def __getitem__(self, key):
+        return self.get()[key]
+
+
 def get_real_canvas_videos_using_sub_cookies(sub_cookies, canvasCourseId):
     return [
         [
-            requests.post(
-                "https://courses.sjtu.edu.cn/lti/vodVideo/getVodVideoInfos",
-                data={
-                    "playTypeHls": "true",
-                    "id": i["videoId"],
-                    "isAudit": "true"
-                },
-                cookies=sub_cookies
-            ).json()["body"]
+            RealCourse(i, sub_cookies)
             for i in requests.post(
                 "https://courses.sjtu.edu.cn/lti/vodVideo/findVodVideoList",
                 data={

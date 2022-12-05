@@ -200,6 +200,10 @@ class MainFrame(tk.Frame):
                 ("", "*.json"),
             )
         )
+        for i, subject in enumerate(self.all_courses):
+            for j, course in enumerate(subject):
+                if type(course) is not dict:
+                    self.all_courses[i][j] = course.get()
         if filename:
             with open(filename, mode="w", encoding="utf-8") as f:
                 json.dump(

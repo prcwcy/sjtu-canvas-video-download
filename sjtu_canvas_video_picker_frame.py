@@ -24,13 +24,7 @@ class SinglePickerFrame(tk.Frame):
             for i, subject in enumerate(all_courses)
         ]
 
-        self.course_names = [
-            [
-                "%d. %s" % (i, course["courName"])
-                for i, course in enumerate(subject)
-            ]
-            for subject in all_courses
-        ]
+        self.course_names = {}
 
         self.subject_label = tk.Label(
             self,
@@ -104,6 +98,12 @@ class SinglePickerFrame(tk.Frame):
 
     def update_course_combobox(self):
         subject_index = self.get_subject_index()
+        if subject_index not in self.course_names:
+            subject = self.all_courses[subject_index]
+            self.course_names[subject_index] = [
+                "%d. %s" % (i, course["courName"])
+                for i, course in enumerate(subject)
+            ]
         self.course_combobox.configure(
             values=self.course_names[subject_index]
         )
@@ -144,13 +144,7 @@ class MultiplePickerFrame(tk.Frame):
             for i, subject in enumerate(all_courses)
         ]
 
-        self.course_names = [
-            [
-                "%d. %s" % (i, course["courName"])
-                for i, course in enumerate(subject)
-            ]
-            for subject in all_courses
-        ]
+        self.course_names = {}
 
         self.subject_label = tk.Label(
             self,
@@ -253,6 +247,12 @@ class MultiplePickerFrame(tk.Frame):
 
     def update_course_combobox(self):
         subject_index = self.get_subject_index()
+        if subject_index not in self.course_names:
+            subject = self.all_courses[subject_index]
+            self.course_names[subject_index] = [
+                "%d. %s" % (i, course["courName"])
+                for i, course in enumerate(subject)
+            ]
         self.lower_course_combobox.configure(
             values=self.course_names[subject_index]
         )

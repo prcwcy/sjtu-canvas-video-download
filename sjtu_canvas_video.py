@@ -126,10 +126,32 @@ def get_course(course_id, cookies, oauth_consumer_key):
             },
             cookies=cookies
         ).json()
+        if course is not None and "loginUserId" in course:
+            del course["loginUserId"]
         return course
     except Exception:
         pass
     return None
+
+
+class Course:
+    def __init__(self, course_id, cookies, oauth_consumer_key):
+        self.course_id = course_id
+        self.cookies = cookies
+        self.oauth_consumer_key = oauth_consumer_key
+        self.flag = False
+        self.course = None
+
+    def get(self):
+        if not self.flag:
+            self.flag = True
+            self.course = get_course(
+                self.course_id, self.cookies, self.oauth_consumer_key
+            )
+        return self.course
+
+    def __getitem__(self, key):
+        return self.get()[key]
 
 
 def get_all_courses(cookies):
@@ -144,12 +166,9 @@ def get_all_courses(cookies):
             continue
         courses = []
         for course_id in course_ids:
-            course = get_course(course_id, cookies, oauth_consumer_key)
-            if course is None:
-                continue
-            if "loginUserId" in course:
-                del course["loginUserId"]
-            courses.append(course)
+            courses.append(
+                Course(course_id, cookies, oauth_consumer_key)
+            )
         if courses:
             all_courses.append(courses)
     return all_courses
