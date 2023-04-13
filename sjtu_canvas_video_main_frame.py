@@ -8,6 +8,7 @@ from sjtu_canvas_video_picker_frame import SinglePickerFrame, MultiplePickerFram
 from sjtu_canvas_video_helper import create_window
 from sjtu_canvas_video import get_all_courses
 from sjtu_real_canvas_video import get_real_canvas_videos, get_real_canvas_videos_using_sub_cookies
+from sjtu_history_frame import HistoryFrame
 import json
 
 
@@ -75,6 +76,20 @@ class MainFrame(tk.Frame):
             text="保存下载地址"
         )
         self.export_button.grid(column=0, row=num_row, columnspan=4)
+        num_row += 1
+
+        self.history_label = tk.Label(
+            self,
+            text="点击下方的按钮继续之前未完成的下载."
+        )
+        self.history_label.grid(column=0, row=num_row, columnspan=4)
+        num_row += 1
+        self.history_button = tk.Button(
+            self,
+            command=self.popup_history,
+            text="历史"
+        )
+        self.history_button.grid(column=0, row=num_row, columnspan=4)
         num_row += 1
 
         self.download_label = tk.Label(
@@ -239,3 +254,8 @@ class MainFrame(tk.Frame):
             tkinter.messagebox.showerror("错误", "请登录")
         else:
             self.refresh_all_courses()
+
+    def popup_history(self):
+        window = create_window(self.master)
+        window.geometry("400x160")
+        HistoryFrame(window)
