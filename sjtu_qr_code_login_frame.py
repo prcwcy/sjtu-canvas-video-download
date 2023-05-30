@@ -75,7 +75,7 @@ class QRCodeLoginFrame(tk.Frame):
         self.callback(result)
 
     def refresh_all(self):
-        self.params, self.uuid, self.cookies = get_params_uuid_cookies(
+        self.params, self.uuid, self.cookies, self.url2 = get_params_uuid_cookies(
             self.url
         )
         if self.wss is not None:

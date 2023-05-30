@@ -3,6 +3,7 @@ from PIL import Image
 from bs4 import BeautifulSoup
 import io
 import urllib.parse
+import time
 
 
 def parse_params(url):
@@ -31,16 +32,20 @@ def get_params_uuid_cookies(url):
     cookies = r.cookies
     for i in r.history:
         cookies.update(i.cookies)
-    return params, uuid, cookies
+    return params, uuid, cookies, r.url
 
 
-def get_captcha_img(uuid, cookies):
+def get_captcha_img(uuid, cookies, url2):
     r = requests.get(
         "https://jaccount.sjtu.edu.cn/jaccount/captcha",
         params={
-            "uuid": uuid
+            "uuid": uuid,
+            "t": time.time_ns()//1000000
         },
-        cookies=cookies
+        cookies=cookies,
+        headers={
+            "Referer": url2
+        }
     )
     img = Image.open(io.BytesIO(r.content))
     return img

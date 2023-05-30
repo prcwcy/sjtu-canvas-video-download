@@ -128,7 +128,7 @@ class LoginFrame(tk.Frame):
     def refresh_captcha(self):
         self.captcha_img = ImageTk.PhotoImage(
             get_captcha_img(
-                self.uuid, self.cookies
+                self.uuid, self.cookies, self.url2
             )
         )
         self.captcha_label.configure(
@@ -136,7 +136,7 @@ class LoginFrame(tk.Frame):
         )
 
     def refresh_all(self):
-        self.params, self.uuid, self.cookies = get_params_uuid_cookies(
+        self.params, self.uuid, self.cookies, self.url2 = get_params_uuid_cookies(
             self.url
         )
         self.refresh_captcha()
