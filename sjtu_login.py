@@ -20,15 +20,7 @@ def get_params_uuid_cookies(url):
         headers={"accept-language": "zh-CN"}
     )
     params = parse_params(r.url)
-    uuid = BeautifulSoup(
-        r.content, "html.parser"
-    ).find(
-        "input",
-        attrs={
-            "type": "hidden",
-            "name": "uuid"
-        }
-    )["value"]
+    uuid = BeautifulSoup(r.content, 'html.parser').find('a', attrs={'id': 'firefox_link'})['href'].split('=')[1]
     cookies = r.cookies
     for i in r.history:
         cookies.update(i.cookies)
