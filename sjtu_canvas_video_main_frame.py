@@ -7,7 +7,7 @@ from sjtu_qr_code_login_frame import QRCodeLoginFrame
 from sjtu_canvas_video_picker_frame import SinglePickerFrame, MultiplePickerFrame
 from sjtu_canvas_video_helper import create_window
 from sjtu_canvas_video import get_all_courses
-from sjtu_real_canvas_video import get_real_canvas_videos, get_real_canvas_videos_using_sub_cookies
+from sjtu_real_canvas_video_v2 import get_real_canvas_videos_v2
 from sjtu_history_frame import HistoryFrame
 import json
 
@@ -181,7 +181,7 @@ class MainFrame(tk.Frame):
             if not course_id:
                 tkinter.messagebox.showerror("错误", "请输入课程ID")
                 return
-            self.all_courses = get_real_canvas_videos(course_id, self.cookies)
+            self.all_courses = get_real_canvas_videos_v2(course_id, self.cookies)
         else:
             self.all_courses = get_all_courses(self.cookies)
         self.refresh_status_label()
