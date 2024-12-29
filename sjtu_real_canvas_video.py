@@ -8,7 +8,7 @@ def get_sub_cookies(course_id, oc_cookies):
         for i in
         BeautifulSoup(
             requests.get(
-                f"https://oc.sjtu.edu.cn/courses/{course_id}/external_tools/8199",
+                f"https://oc.sjtu.edu.cn/courses/{course_id}/external_tools/8332",
                 cookies=oc_cookies
             ).content, "html.parser"
         ).find(
