@@ -4,14 +4,13 @@ jobs:
   win:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: '3.12'
       - run: pip install -r requirements.txt
-      - run: pyinstaller main.py
-      - run: xcopy aria2\ dist\main\aria2\ /e /i /y
-      - uses: actions/upload-artifact@v3
+      - run: pyinstaller -p . --contents-directory . --add-data aria2:aria2 main.py
+      - uses: actions/upload-artifact@v4
         with:
           name: windows
           path: dist/main/
