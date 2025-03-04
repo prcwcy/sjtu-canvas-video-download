@@ -2,13 +2,42 @@ import requests
 from bs4 import BeautifulSoup
 
 
+
+def get_external_tool_id(course_id, oc_cookies):
+    external_tool_id = "8329"
+    try:
+        elem = (
+            BeautifulSoup(
+                requests.get(
+                    f"https://oc.sjtu.edu.cn/courses/{course_id}",
+                    cookies=oc_cookies,
+                ).content,
+                "html.parser",
+            )
+            .find("div", attrs={"id": "main"})
+            .find(
+                "a",
+                string=lambda x: x.startswith("课堂视频") and not x.endswith("旧版"),
+            )
+        )
+
+        external_tool_id = elem["href"].rpartition("/")[-1]
+
+    except Exception as e:
+        print("ERR:", e)
+        print(f"using default external_tool_id: {external_tool_id}")
+
+    return external_tool_id
+
+
 def get_sub_cookies_v2(course_id, oc_cookies):
+    external_tool_id = get_external_tool_id(course_id, oc_cookies)
     data = {
         i["name"]: i["value"]
         for i in
         BeautifulSoup(
             requests.get(
-                f"https://oc.sjtu.edu.cn/courses/{course_id}/external_tools/8329",
+                f"https://oc.sjtu.edu.cn/courses/{course_id}/external_tools/{external_tool_id}",
                 cookies=oc_cookies,
             ).content, "html.parser"
         ).find(
