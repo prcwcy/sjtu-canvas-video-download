@@ -8,6 +8,7 @@ from sjtu_canvas_video_picker_frame import SinglePickerFrame, MultiplePickerFram
 from sjtu_canvas_video_helper import create_window
 from sjtu_canvas_video import get_all_courses
 from sjtu_real_canvas_video_v2 import get_real_canvas_videos_v2 as get_real_canvas_videos
+# from sjtu_real_canvas_video import get_real_canvas_videos as get_real_canvas_videos
 from sjtu_history_frame import HistoryFrame
 import json
 
