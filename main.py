@@ -1,3 +1,4 @@
+import monkey_patch
 import tkinter as tk
 from sjtu_canvas_video_main_frame import MainFrame
 import logging
